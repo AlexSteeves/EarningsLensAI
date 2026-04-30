@@ -1,9 +1,8 @@
-import chromadb
 import anthropic
+from db import client
 
 
-def query_earnings(question: str, collection_name: str="earnings") -> dict:
-    client = chromadb.PersistentClient(path="./chroma_db")
+def query_earnings(question: str, collection_name: str = "earnings") -> dict:
     collection = client.get_or_create_collection(collection_name)
 
     results = collection.query(
@@ -12,22 +11,35 @@ def query_earnings(question: str, collection_name: str="earnings") -> dict:
     )
 
     chunks = results["documents"][0]
+    if not chunks:
+        return {"answer": "No documents have been uploaded yet. Please upload a transcript first.", "sources": []}
     context = "\n\n".join(chunks)
 
     prompt = f"""
-    
-    You are a financial analyst assistant. Use the following excerpts from an earnings call transcript to answer the question.
-    Context:
-    {context}
+        You are a financial analyst assistant. Your task is to answer questions using only information from earnings call transcript excerpts.
 
-    Question: {question}
+        Here is the context from the earnings call transcript:
+        <context>
+        {context}
+        </context>
 
-    Answer based only on the context provided. If the answer is not in the context, say so.
+        Here is the question to answer:
+        <question>
+        {question}
+        </question>
+
+        Important rules:
+        - Answer ONLY using information explicitly stated in the context above
+        - If the answer is not in the context, respond with "The answer is not available in the provided context"
+        - Be concise and precise - every word must add value
+        - Use short, direct sentences
+        - Avoid unnecessary elaboration or filler words
+        - Format your response using markdown: use **bold** for key figures and percentages, and bullet points for lists
     """
     
     ai_client = anthropic.Anthropic()
     response = ai_client.messages.create(
-        model="claude-sonnet-4-6",
+        model="claude-haiku-4-5-20251001",
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}]
     )

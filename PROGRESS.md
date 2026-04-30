@@ -42,8 +42,8 @@ Stack: FastAPI (Python backend) · React + TypeScript (frontend) · ChromaDB (ve
 ## Next Steps
 
 ### Must Do
-- [ ] End-to-end test once Anthropic credits are active
-- [ ] Add .gitignore and push to GitHub
+- [x] End-to-end test once Anthropic credits are active
+- [ ] Push to GitHub
 - [ ] Deploy backend (Railway or Render)
 - [ ] Deploy frontend (Vercel)
 
