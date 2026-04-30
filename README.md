@@ -6,6 +6,10 @@ Upload a PDF and ask anything. EarningsLensAI chunks the document, stores it in 
 
 ---
 
+
+<video src="https://github.com/user-attachments/assets/4ffea9bc-9d10-462d-a918-0d34cdf52eea" controls width="100%"></video>
+
+
 ## Stack
 
 | Layer | Tech |
